@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.miaoaotian.sys_back.dao.PetMapper">
+    <sql id="select">
+        select id, name, breed, age, price, health_status, status, avatar, gender, description from pets
+    </sql>
+    <select id="findAll" resultType="com.miaoaotian.sys_back.model.Pet">
+        <include refid="select"/>
+        <where>
+            <if test="name != null and name != ''">
+                and name like concat('%', #{name}, '%')
+            </if>
+            <if test="breed != null and breed != ''">
+                and breed like concat('%', #{breed}, '%')
+            </if>
+            <if test="healthStatus != null and healthStatus != -1">
+                and health_status = #{healthStatus}
+            </if>
+            <if test="status != null and status != -1">
+                and status = #{status}
+            </if>
+            <if test="gender != null and gender != -1">
+                and gender = #{gender}
+            </if>
+        </where>
+    </select>
+    <insert id="insert">
+        insert into
+            pets(name, breed, age, price, health_status, status, avatar, gender, description)
+        values
+            (#{name}, #{breed}, #{age}, #{price}, #{healthStatus}, #{status}, #{avatar}, #{gender}, #{description})
+    </insert>
+    <update id="update">
+        update pets
+        set name = #{name},
+            breed = #{breed},
+            age = #{age},
+            price = #{price},
+            health_status = #{healthStatus},
+            status = #{status},
+            avatar = #{avatar},
+            gender = #{gender},
+            description = #{description}
+        where id = #{id}
+    </update>
+    <delete id="deleteByIds">
+        delete from pets where id in
+        <foreach collection="ids" item="id" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

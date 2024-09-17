@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.miaoaotian.sys_back.dao.StaffMapper">
+    <sql id="select">
+        select id, name, position, join_date, salary, address, phone, email from staff
+    </sql>
+    <select id="findAll" resultType="com.miaoaotian.sys_back.model.Staff">
+        <include refid="select"/>
+        <where>
+            <if test="name != null and name != ''">
+                and name like concat('%', #{name}, '%')
+            </if>
+            <if test="position != null and position != -1">
+                and position = #{position}
+            </if>
+            <if test="phone != null and phone != ''">
+                and phone like concat('%', #{phone}, '%')
+            </if>
+            <if test="email != null and email != ''">
+                and email like concat('%', #{email}, '%')
+            </if>
+            <if test="joinDate != null">
+                and DATE_FORMAT(join_date, '%Y-%m-%d') = #{joinDate}
+            </if>
+        </where>
+    </select>
+    <insert id="insert">
+        insert into staff(name, position, join_date, salary, address, phone, email)
+        values(#{name}, #{position}, #{joinDate}, #{salary}, #{address}, #{phone}, #{email})
+    </insert>
+    <update id="update">
+        update staff set
+        name = #{name},
+        position = #{position},
+        join_date = #{joinDate},
+        salary = #{salary},
+        address = #{address},
+        phone = #{phone},
+        email = #{email}
+        where id = #{id}
+    </update>
+    <delete id="deleteByIds">
+        delete from staff where id in
+        <foreach collection="ids" item="id" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

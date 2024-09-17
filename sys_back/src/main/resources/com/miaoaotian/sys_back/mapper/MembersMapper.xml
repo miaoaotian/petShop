@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.miaoaotian.sys_back.dao.MembersMapper">
+    <sql id="select">
+        select id, name, phone, email, join_date, address, level, cost,sex,last_time from members
+    </sql>
+    <select id="findAll" resultType="com.miaoaotian.sys_back.model.Member">
+        <include refid="select"/>
+        <where>
+            <if test="name != null and name != ''">
+                and name like concat('%', #{name}, '%')
+            </if>
+            <if test="phone != null and phone != ''">
+                and phone like concat('%', #{phone}, '%')
+            </if>
+            <if test="email != null and email != ''">
+                and email like concat('%', #{email}, '%')
+            </if>
+            <if test="joinDate != null">
+                and DATE_FORMAT(join_date, '%Y-%m-%d') = #{joinDate}
+            </if>
+        </where>
+    </select>
+    <select id="getUserByPhone" resultType="com.miaoaotian.sys_back.model.Member">
+        select * from members where phone = #{phone}
+    </select>
+    <select id="countAllMoney" resultType="java.lang.Integer">
+        select count(id) from members where date_format(join_date,'%Y-%m-%d') = #{today}
+    </select>
+    <insert id="insert">
+        insert into
+            members(name, phone, email, join_date, address, level, cost,sex,last_time,pass)
+        values (#{name}, #{phone}, #{email}, #{joinDate}, #{address}, #{level}, #{cost},#{sex},#{lastTime},#{pass})
+    </insert>
+    <update id="update">
+        update members
+        set name = #{name},
+            phone = #{phone},
+            email = #{email},
+            join_date = #{joinDate},
+            address = #{address},
+            level = #{level},
+            cost = #{cost},
+            sex = #{sex},
+            last_time = #{lastTime},
+            pass = #{pass}
+        where id = #{id}
+    </update>
+    <delete id="deleteByIds">
+        delete from members where id in
+        <foreach collection="ids" item="id" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

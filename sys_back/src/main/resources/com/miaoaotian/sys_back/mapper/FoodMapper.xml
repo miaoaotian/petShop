@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.miaoaotian.sys_back.dao.FoodMapper">
+    <sql id="select">
+        select id, name, brand, type, price, nums, expiry_date from food
+    </sql>
+    <select id="findAll" resultType="com.miaoaotian.sys_back.model.Food">
+        <include refid="select"/>
+        <where>
+            <if test="name != null and name != ''">
+                and name like concat('%', #{name}, '%')
+            </if>
+            <if test="brand != null and brand != ''">
+                and brand like concat('%', #{brand}, '%')
+            </if>
+            <if test="type != null and type != ''">
+                and type like concat('%', #{type}, '%')
+            </if>
+            <if test="expiryDate != null">
+                and DATE_FORMAT(expiry_date,'%Y-%m-%d') = #{expiryDate}
+            </if>
+        </where>
+    </select>
+    <select id="findByIdAndValue" resultType="com.miaoaotian.sys_back.model.vo.wordCloudVO">
+        select name,#{value} / price as value from food where id = #{id}
+    </select>
+
+    <insert id="insert">
+        insert into
+            food(name, brand, type, price, nums, expiry_date)
+        values
+            (#{name}, #{brand}, #{type}, #{price}, #{nums}, #{expiryDate})
+    </insert>
+    <update id="update">
+        update food
+        set name = #{name}, brand = #{brand}, type = #{type}, price = #{price}, nums = #{nums}, expiry_date = #{expiryDate}
+        where id = #{id}
+    </update>
+    <delete id="deleteByIds">
+        delete from food where id in
+        <foreach collection="ids" item="id" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

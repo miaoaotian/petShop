@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration>
+<configuration>
+    <!-- 引入logback的默认配置 -->
+    <include resource="org/springframework/boot/logging/logback/base.xml"/>
+
+    <!-- 日志名称前缀mybatis.dao是在mybatis.xml中配置的。注意：在root中已指定了appender-ref，此处则无需指定，否则日志输出会重复 -->
+    <!-- level指定为trace可以输出更多日志，包括结果集。本处指定为debug，以减少日志输出量，mybatis输出sql日志是在debug级别 -->
+    <logger name="mybatis" level="debug"/>
+</configuration>

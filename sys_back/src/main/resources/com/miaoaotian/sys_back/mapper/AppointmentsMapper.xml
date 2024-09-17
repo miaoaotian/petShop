@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.miaoaotian.sys_back.dao.AppointmentsMapper">
+
+    <select id="getAppointmentByTime" resultType="com.miaoaotian.sys_back.model.Appointments">
+        select a.*,m.name from appointments a join members m on a.mid = m.id
+                 where DATE_FORMAT(a.date,'%Y-%m-%d') = #{date} and a.sid = #{sid}
+    </select>
+</mapper>
